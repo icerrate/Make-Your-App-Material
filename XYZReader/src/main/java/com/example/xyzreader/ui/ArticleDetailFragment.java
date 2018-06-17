@@ -57,8 +57,9 @@ public class ArticleDetailFragment extends Fragment implements
 
     private Unbinder unbinder;
 
+    @Nullable
     @BindView(R.id.meta_bar)
-    LinearLayoutCompat metaBar;
+    LinearLayoutCompat mMetaBar;
 
     @BindView(R.id.photo)
     AppCompatImageView mPhotoView;
@@ -75,6 +76,10 @@ public class ArticleDetailFragment extends Fragment implements
     @Nullable
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    @Nullable
+    @BindView(R.id.toolbar_land)
+    Toolbar mToolbarLand;
 
     @Nullable
     @BindView(R.id.toolbar_layout)
@@ -174,8 +179,8 @@ public class ArticleDetailFragment extends Fragment implements
                                         int mutedColor = p.getDarkMutedColor(0xFF333333);
                                         if (mToolbar != null) {
                                             mToolbar.setBackgroundColor(mutedColor);
-                                        } else if (mAppBarLayout != null) {
-                                            mAppBarLayout.setBackgroundColor(mutedColor);
+                                        } else if (mMetaBar != null) {
+                                            mMetaBar.setBackgroundColor(mutedColor);
                                         }
                                     }
                                 });
@@ -189,11 +194,21 @@ public class ArticleDetailFragment extends Fragment implements
             mByView.setText("N/A");
             mBodyView.setText("N/A");
         }
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        if (mToolbar != null) {
+            setupToolbar(mToolbar);
+        } else if (mToolbarLand != null) {
+            setupToolbar(mToolbarLand);
+        }
+    }
+
+    private void setupToolbar(Toolbar toolbar) {
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onNavigateUp();
+                if (getActivity() != null) {
+                    getActivity().onNavigateUp();
+                }
             }
         });
     }
