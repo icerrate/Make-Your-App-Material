@@ -21,6 +21,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,8 @@ import butterknife.Unbinder;
  */
 public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    public static final int DEFAULT_DARK_MUTED_COLOR = 0xFF333333;
 
     public static final String KEY_ITEM_ID = "item_id_key";
 
@@ -161,7 +164,8 @@ public class ArticleDetailFragment extends Fragment implements
                                 + cursor.getString(ArticleLoader.Query.AUTHOR)
                                 + "</font>"));
             }
-            mBodyView.setText(Html.fromHtml(cursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            Spanned body = Html.fromHtml(cursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />"));
+            mBodyView.setText(body);
             GlideApp.with(Objects.requireNonNull(getContext()))
                     .load(cursor.getString(ArticleLoader.Query.PHOTO_URL))
                     .listener(new RequestListener<Drawable>() {
@@ -176,12 +180,8 @@ public class ArticleDetailFragment extends Fragment implements
                             if (bitmap != null) {
                                 Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                                     public void onGenerated(Palette p) {
-                                        int mutedColor = p.getDarkMutedColor(0xFF333333);
-                                        if (mToolbar != null) {
-                                            mToolbar.setBackgroundColor(mutedColor);
-                                        } else if (mMetaBar != null) {
-                                            mMetaBar.setBackgroundColor(mutedColor);
-                                        }
+                                        int darkMutedColor = p.getDarkMutedColor(DEFAULT_DARK_MUTED_COLOR);
+                                        applyColorToTitle(darkMutedColor);
                                     }
                                 });
                             }
@@ -211,6 +211,14 @@ public class ArticleDetailFragment extends Fragment implements
                 }
             }
         });
+    }
+
+    private void applyColorToTitle(int color) {
+        if (mToolbar != null) {
+            mToolbar.setBackgroundColor(color);
+        } else if (mMetaBar != null) {
+            mMetaBar.setBackgroundColor(color);
+        }
     }
 
     @NonNull

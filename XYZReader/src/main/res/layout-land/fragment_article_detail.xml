@@ -100,11 +100,14 @@
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/article_body"
+                    android:background="@color/white"
                     style="?android:attr/textAppearanceMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
                     android:padding="@dimen/detail_metabar_vert_padding"
+                    android:maxLines="100"
+                    android:ellipsize="end"
                     android:textColorLink="@color/theme_accent"
                     android:textSize="@dimen/detail_body_text_size" />
 
